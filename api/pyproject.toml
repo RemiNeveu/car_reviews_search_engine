@@ -1,0 +1,88 @@
+[project]
+name = "ia6-rag"
+version = "0.1.0"
+description = "API for the IA6 rag project"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "annoy>=1.17",
+    "fastapi[standard]>=0.115.10",
+    "pandas>=2.2.3",
+    "pydantic>=2.10.6",
+    "sentence-transformers>=3.4.1",
+    "torch>=2.6.0",
+    "torchvision>=0.21.0",
+]
+
+
+[tool.uv.sources]
+torch = [
+    { index = "pytorch-cpu" },
+]
+torchvision = [
+    { index = "pytorch-cpu" },
+]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[tool.mypy]
+strict = true
+disable_error_code = ["import-not-found", "import-untyped"]
+disallow_untyped_decorators = false
+
+
+[tool.ruff]
+include = ["pyproject.toml", "**/*.py"]
+line-length = 90
+indent-width = 4
+
+[tool.ruff.lint]
+select = [
+    # Pyflakes
+    "F",
+    # pycodestyle
+    "E","W",
+    # isort
+    "I",
+    # pep8-naming
+    "N",
+    # pydocstyle
+    "D",
+    # pyupgrade
+    "UP",
+    # flake8-annotations
+    "ANN",
+    # flake8-async
+    "ASYNC",
+    # flake8-bandit
+    "S",
+    # flake8-bugbear
+    "B",
+    # flake8-comprehensions
+    "C4",
+    # flake8-datetimez
+    "DTZ",
+    # flake8-print
+    "T20",
+    # flake8-return
+    "RET",
+    # flake8-simplify
+    "SIM",
+    # flake8-unused-arguments
+    "ARG",
+    # Pylint
+    "PL",
+]
+ignore = ["B008"]
+
+[tool.ruff.lint.pydocstyle]
+# Use Google-style docstrings.
+convention = "google"
+
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"

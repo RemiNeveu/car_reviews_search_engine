@@ -1,0 +1,63 @@
+networks:
+  ia6_rag_network:
+    driver: bridge
+    ipam:
+     config:
+       - subnet: 10.5.0.0/16
+         gateway: 10.5.0.1
+
+services:
+  ia6_rag_api:
+    container_name: ia6_rag_api
+    build:
+      context: ./api
+      dockerfile: dockerfile
+    ports:
+      - "8000:8000"
+    networks:
+      ia6_rag_network:
+        ipv4_address: 10.5.0.5
+    volumes:
+      - ./api:/app
+    working_dir: /app
+    command: >
+      sh -c "\
+      if [ \"${MODE:-run}\" = \"lint\" ]; then \
+        echo "----------RUFF----------"; \
+        uvx ruff format .; \
+        uvx ruff check . --fix || exit 1; \
+        echo "----------MYPY----------"; \
+        uvx mypy . || exit 1
+      else \
+        uv run fastapi run main.py --host 0.0.0.0 --port 8000; \
+      fi
+      "
+  
+  ia6_rag_front:
+    container_name: ia6_rag_front
+    build:
+      context: ./front
+      dockerfile: dockerfile
+    ports:
+      - "8001:8001"
+    networks:
+      ia6_rag_network:
+        ipv4_address: 10.5.0.6
+    volumes:
+      - ./front:/app
+    working_dir: /app
+    environment:
+      - STREAMLIT_BROWSER_GATHER_USAGE_STATS=false
+      - STREAMLIT_SERVER_ENABLE_CORS=false
+    command: >  
+      sh -c "\
+      if [ \"${MODE:-run}\" = \"lint\" ]; then \
+        echo "----------RUFF----------"; \
+        uvx ruff format .; \
+        uvx ruff check . --fix || exit 1; \
+        echo "----------MYPY----------"; \
+        uvx mypy . || exit 1
+      else \
+        uv run streamlit run main.py --server.port=8001 --server.address=0.0.0.0; \
+      fi
+      "
