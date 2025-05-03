@@ -14,12 +14,13 @@ docker compose up
 There are two parts to the project, each running in its own container and communicating through HTTP.
 
 ## Back
-The API is built with the [FastAPI](https://fastapi.tiangolo.com/) framework and has a single route, `search`, which allows sending a query and the desired number of results. The API is connected to two databases:
-
-The first is a SQLite database containing the textual version of each document.
-The second is a vector database using the [Annoy](https://github.com/spotify/annoy) library. This database contains the same data in vector form.
-The model used to generate the embeddings of the documents and user queries is all-mpnet-base-v2, used with the [sentence-transformers](https://github.com/UKPLab/sentence-transformers) library. This model provides 768-dimensional vectors, offering a good compromise that allows processing texts longer than a single sentence while requiring reasonable time and resources.
-A match is then made between the two databases to return the original document in its textual form.
+The API is built with the [FastAPI](https://fastapi.tiangolo.com/) framework and has a single route, `search`, which allows sending a query and the desired number of results. The API is connected to two databases:  
+  
+- The first is a SQLite database containing the textual version of each document.  
+- The second is a vector database using the [Annoy](https://github.com/spotify/annoy) library. This database contains the same data in vector form.  
+  
+The model used to generate the embeddings of the documents and user queries is all-mpnet-base-v2, used with the [sentence-transformers](https://github.com/UKPLab/sentence-transformers) library. This model provides 768-dimensional vectors, offering a good compromise that allows processing texts longer than a single sentence while requiring reasonable time and resources.  
+A match is then made between the two databases to return the original document in its textual form.  
 
 ## Front
 The front is build with [streamlit](https://streamlit.io/).
